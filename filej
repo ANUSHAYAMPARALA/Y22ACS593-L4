@@ -1,0 +1,28 @@
+Jenkins
+===============
+create a new ec2-instance and connect in mobaxterm
+install git,java and maven
+install Jenkins
+# wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+# rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+# yum update
+# yum install jenkins -y
+# systemctl start jenkins
+# cat /var/lib/jenkins/secrets/initialAdminPassword
+ff0dfa928b374489a257dde91954d600
+open the Jenkins instance in the browser and paste the password
+select the select plugins to install => there deselect all the plugins=>click install
+asks you to set the password and username =>provide credentials there
+in the Jenkins page
+go to manage Jenkins (settings) select plugins=>available plugins=>search for git and install git
+next maven integration and install it
+=>manage jenkins=>tools=>add jdk->name->Java->path to java
+=>add git and git path=>(which git)
+=>add maven->Maven->path to maven->/opt/tomcat
+configure nodes properties
+configure new job
+use source code management as git
+place the git hub url
+change branch to */main
+place clean install
+save and apply and build
