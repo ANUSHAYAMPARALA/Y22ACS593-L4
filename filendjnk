@@ -1,0 +1,24 @@
+Jenkins job for docker 
+====> 
+after executing the above commands 
+login to Jenkins account=> 
+managejenkins=>system=>ssh servers=>add=>name:Dockerhost 
+           =>Hostname:docker machine private ip 
+             =>username:dockeradmin 
+           =>advanced=>use password authentication=>enter 
+password that you have  
+     created for docker 
+                                       apply and save 
+ 
+=>jenkins=>new item-=>name,desc,git=> 
+postbuildsteps==>send files or execute commands over ssh 
+           ssh server 
+          name:DockerHost 
+          transferset 
+  source file: target/helloworld.war 
+  remove prefix:target/ 
+     execute command: 
+   docker build -t tomcat . 
+   docker run -d --name tomcat-container -p 8081:8080 tomcat 
+        apply & save 
+=====>build success
