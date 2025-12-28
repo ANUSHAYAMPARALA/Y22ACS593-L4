@@ -1,0 +1,15 @@
+publish over ssh
+=>create a new job
+=>manage jenkins=>plugins=>available plugins=>publish over ssh(install)
+=>manage jenkins=>system=>configure=>publish over ssh=>ssh server=>add name=>tomcat-server
+					hostname->ipadderess of tomcat
+					username=>ece-user
+				key=>check for password authentication=>paste rsa key of tomcat instance in the key field
+navigate back to created job
+=>post build actions=>send build artifact over ssh=>in the transfer=>source files:target/helloworld.war
+						=>remove prefix=>target
+						=>remove directory=>//opt//tomcat//webapps
+=>apply and save
+before building it =>in the tomcat instance run these two commands=>
+$ sudo usermod -aG root ec2-user
+$ sudo chmod -R g+w /opt/tomcat/webapps
