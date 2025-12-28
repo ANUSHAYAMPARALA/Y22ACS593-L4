@@ -1,0 +1,63 @@
+=>maven installation
+# cd /opt
+# wget https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
+# tar -xvzf apache-maven-3.9.9-bin.tar.gz
+# mv apache-maven-3.9.9 maven
+# vi .bashrc
+	export M2_HOME='/opt/maven'
+	export PATH=$PATH:/opt/maven/bin
+----------------------------------------------------------------------------------
+=>creating a maven web application
+
+$ mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-webapp -DarchetypeVersion=1.4 -DgroupId=com.helloworld -DartifactId=helloworld -DinteractiveMode=false -U
+$ cd helloworld
+$ mvn clean install
+$ cd target
+$ sudo cp helloworld.war /opt/tomcat/webapps
+regform
+Change to index.jsp file which is in the path helloworld/src/ main/webapp 
+Write the code to create a registration form 
+Index.jsp: 
+<%@ page import="java.io.*" %> 
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Registration Form</title> 
+</head> 
+<body> 
+ 
+<% 
+    // Check if the form was submitted (method=POST) 
+    if ("POST".equalsIgnoreCase(request.getMethod())) { 
+        String name = request.getParameter("name"); 
+        String email = request.getParameter("email"); 
+        String password = request.getParameter("password"); 
+        String phone = request.getParameter("phone"); 
+%> 
+ 
+        <h2>Registration Successful!</h2> 
+        <p><b>Name:</b> <%= name %></p> 
+        <p><b>Email:</b> <%= email %></p> 
+        <p><b>Phone:</b> <%= phone %></p> 
+ 
+        <br><a href="index.jsp">Go Back</a> 
+ 
+<% 
+    } else { 
+        // Show the form initially 
+%> 
+ 
+<h2>Registration Form</h2> 
+<form method="post"> 
+ 
+    Name: <input type="text" name="name"><br><br> 
+    Email: <input type="email" name="email"><br><br> 
+    Password: <input type="password" name="password"><br><br> 
+    Phone: <input type="text" name="phone"><br><br> 
+<input type="submit" value="Register"> 
+</form> 
+<% 
+} 
+%> 
+</body> 
+</html> 
