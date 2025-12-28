@@ -1,0 +1,49 @@
+tomcat-maven application:
+==========================================================
+create a new ec2-instance and connect to it in mobaxterm
+=>change username
+1.$sudo yum update
+2.$sudo nano /etc/hostname
+3.$sudo init 6
+=>install git
+$ sudo yum install git -y
+$ git -v
+-------------------------------------------------------
+=>install java
+$ sudo yum  install java-17-amazon-corretto-devel
+=>set environment variables
+$ vi .bashrc
+in the bashrc file
+export JAVA_HOME='/usr/lib/jvm/java-17-amazon-corretto.x86_64/'
+$source .bashrc
+=>change to root user
+$ sudo su -
+#vi .bashrc
+in the bashrc file
+export JAVA_HOME='/usr/lib/jvm/java-17-amazon-corretto.x86_64/'
+#source .bashrc
+---------------------------------------------------------------------
+=>install tomcat
+#cd /opt
+# wget https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.109/bin/apache-tomcat-9.0.109.tar.gz
+# tar -xvzf apache-tomcat-9.0.109.tar.gz
+# mv apache-tomcat-9.0.109 tomcat
+# cd tomcat
+# cd bin
+# ln -s /opt/tomcat/bin/shutdown.sh /usr/bin/tomcat-stop
+# ln -s /opt/tomcat/bin/startup.sh /usr/bin/tomcat-start
+=>change port number from 8080 to 8090
+# cd /opt/tomcat
+# cd conf
+# vi server.xml
+....change the port number from 8080-8090
+# tomcat-start
+#tomcat-stop
+open the tomcat instance in browser
+in the tomcat users.xml file
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+
+<user username="tomcatgui" password="tomcatguipwd" roles="manager-gui"/>
+
+<user username="tomcatscript" password="tomcatscriptpwd" roles="manager-script"/>
