@@ -1,0 +1,30 @@
+docker 
+======
+create a new ec2-instance for docker and connect to it in the mobaxterm
+docker: 
+================== 
+$ sudo yum install docker -y 
+$ docker --version 
+$ sudo systemctl start docker 
+$ sudo su - 
+# docker images 
+# docker ps 
+# useradd dockeradmin 
+# passwd dockeradmin 
+typepassword 
+dockerfile should be created on dockeradmin
+$ nano Dockerfile 
+FROM tomcat:latest 
+RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps/ 
+COPY helloworld.war /usr/local/tomcat/webapps/ 
+# sudo usermod -aG docker dockeradmin 
+# sudo groups dockeradmin 
+# sudo nano /etc/ssh/sshd_config 
+change password authentication to yes 
+# sudo systemctl restart sshd 
+# ssh dockeradmin@172.31.9.6(docker privateip) 
+enter docker password 
+$ docker pull tomcat 
+$ docker run -d --name tomcat-container -p 8081:8080 tomcat 
+$ su - dockeradmin 
+$ docker rm -f tomcat-container
