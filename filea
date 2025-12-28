@@ -1,0 +1,114 @@
+ansible steps:
+==============
+in the jenkins instance 
+$ sudo systemctl start Jenkins
+$ sudo yum install ansible -y
+$ ansible --version
+$ ssh-keygen
+press enter
+
+$ ls -l .ssh
+in the docker instance create a new password
+$ sudo passwd e2-user
+type password 
+retype password
+
+$ ssh-copy-id ec2-user@dockermachineip
+type docker password
+
+$ ssh ec2-user@dockermachineip
+
+logout
+
+$ mkdir Ansible
+$ cd Ansible/
+$ nano deploy-git.yaml
+---
+- name: To install Git on the managed node
+  hosts: dockerhost
+  become: true
+  tasks:
+    - name: Install Git
+      yum:
+        name: git
+        state: present
+...
+$ cat deploy-git.yaml
+$ nano hosts.ini
+[dockerhost]
+dockerip
+
+$ ansible-playbook -i hosts.ini deploy-git.yaml --syntax-check
+$ ansible-playbook -i hosts.ini deploy-git.yaml
+
+$ nano deploy-web.yaml
+---
+- name: To install WebServer  on the managed node
+  hosts: dockerhost
+  become: true
+  tasks:
+    - name: Install WebServer
+      yum:
+        name: nginx
+        state: present
+    - name: Start the WebServer
+      service:
+        name: nginx
+        state: started
+...
+$ ansible-playbook -i hosts.ini deploy-git.yaml --syntax-check
+$ ansible-playbook -i hosts.ini deploy-git.yaml
+
+$ nano deploy-webapp.yaml
+---
+- name: Deploy WAR file in Tomcat Docker Container
+  hosts: dockerhost
+  become: true
+  vars:
+    war_file: /var/lib/jenkins/workspace/sample-webapp/target/sample-webapp.war
+    container_name: tomcat1-container
+    image_name: tomcat:latest
+    host_port: 8083
+  tasks:
+    - name: Ensure Docker is installed
+      yum:
+        name: docker
+        state: present
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+    - name: Remove any existing container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        force_kill: true
+    - name: Run new Tomcat container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        ports:
+          - "{{ host_port }}:8080"
+        state: started
+        restart_policy: always
+    - name: Copy Tomcat default apps into webapps
+      command: >
+        docker exec {{ container_name }} bash -c
+        "cp -r /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps"
+      ignore_errors: yes
+    - name: Copy WAR file to remote EC2
+      copy:
+        src: "{{ war_file }}"
+        dest: /tmp/sample-webapp.war
+    - name: Copy WAR file into container
+      command: >
+        docker cp /tmp/sample-webapp.war {{ container_name }}:/usr/local/tomcat/webapps
+    - name: Restart Tomcat Container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: started
+        restart: true
+...
+$ ansible-playbook -i hosts.ini deploy-git.yaml --syntax-check
+$ ansible-playbook -i hosts.ini deploy-git.yaml
