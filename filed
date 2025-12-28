@@ -1,0 +1,16 @@
+deploy to a container
+# cd /opt/tomcat/webapps/manager/META-INF
+#nano context.xml
+comment the valve attribute
+in the Jenkins page -> manage jenkins->plugins->available plugins->install deploy to container
+now navigate to manage jenkins->credentails->system->global credentails=>add creadentail=>
+			set username=>tomcatscript
+			password=>tomcatscriptpwd
+			id =>tomcatscript
+			description=>credentials to connect to tomcat
+create a new job 
+goals and options==>clean install
+navigate to deploy to container=>add postbuild action=>deploy war/ear files=>
+				war/ear=>target/helloworld.war
+				contextpath=>/helloworld
+				add tomcatcontainer
