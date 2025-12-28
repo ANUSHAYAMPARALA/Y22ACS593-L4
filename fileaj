@@ -1,0 +1,29 @@
+ansible Jenkins
+===========
+$ sudo usermod -s /bin/bash jenkins
+$ sudo su - jenkins
+$ ssh-keygen
+enter
+
+$ ssh-copy-id ec2-user@dockerprivateip
+$ ssh ec2-user@dockerprivateip
+logout
+logout
+$ sudo usermod -aG ec2-user Jenkins
+$ sudo chmod -R g+rx /home/ec2-user
+
+$ cd Ansible/
+$ nano hosts.ini
+[dockerhost]
+dockerip ansible_user=ec2-user
+$ cd 
+$ sudo systemctl restart Jenkins
+
+in the Jenkins page
+create a new job
+add source code management git
+in the configure
+=>post build steps
+=>execute shell
+ansible-playbook -i /home/ec2-user/Ansible/hosts.ini /home/ec2-user/Ansible/deploy-webapp.yaml
+save and apply build
